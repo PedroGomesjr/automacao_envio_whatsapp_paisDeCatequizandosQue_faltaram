@@ -1,0 +1,52 @@
+## Automação de Mensagens WhatsApp para Pais de Catequizandos
+
+### Introdução
+
+Este script Python tem como objetivo automatizar o envio de mensagens de WhatsApp para os pais de catequizandos que faltaram a um encontro específico. A automação é realizada através de uma API externa e um ambiente Docker para o serviço Evolution API e utiliza dados de duas planilhas Excel: uma com a frequência dos alunos e outra com os dados dos catequizandos e seus respectivos responsáveis.
+
+### Bibliotecas Utilizadas
+
+* **pandas:** Utilizado para manipulação de dados em formato tabular (planilhas Excel).
+* **pywhatkit:** Biblioteca para automatizar tarefas no WhatsApp (observação: o uso desta biblioteca pode ter limitações e instabilidades).
+* **json:** Para manipulação de dados no formato JSON, utilizado para a comunicação com a API.
+* **requests:** Para fazer requisições HTTP para a API.
+* **time:** Para introduzir atrasos entre o envio de cada mensagem, evitando sobrecarregar a API.
+* **os:** Para interagir com o sistema operacional, não utilizado neste script.
+* **datetime:** Para obter a data e hora atuais.
+* **logging:** Para registrar erros e informações durante a execução do script.
+
+### Funcionamento
+
+1. **Leitura das Planilhas:** O script carrega duas planilhas Excel:
+   * **Frequência:** Contém a lista de alunos e sua presença nos encontros.
+   * **Catequizandos:** Contém os dados dos catequizandos, incluindo os nomes dos pais e seus respectivos contatos.
+2. **Identificação de Faltas:** A partir da planilha de frequência, o script identifica os alunos que faltaram no encontro da data atual.
+3. **Criação da Mensagem:** Para cada aluno faltoso, é criada uma mensagem personalizada, incluindo o nome do aluno e o nome do responsável.
+4. **Envio da Mensagem:** A mensagem é enviada através da API que está rodando dentro do container Docker do Evolution API, utilizando o número de telefone do responsável. O script tenta enviar a mensagem para o contato da mãe e, caso não exista, para o contato do pai.
+5. **Tratamento de Erros:** O script utiliza o módulo `logging` para registrar qualquer erro ocorrido durante o processo de envio das mensagens, facilitando a identificação e resolução de problemas.
+
+
+### Estrutura do Código
+
+* **Configuração da API:** O usuário informa a URL da API e a chave de acesso.
+* **Carregamento das Planilhas:** As planilhas são carregadas em dataframes pandas.
+* **Identificação de Faltas:** É criado um dataframe com os alunos faltosos.
+* **Iteração sobre os Alunos Faltosos:** Para cada aluno faltoso, é criada uma mensagem e enviada para o responsável.
+* **Tratamento de Erros:** Os erros são registrados em um arquivo de log.
+
+### Dockerfile:
+* Define a configuração de um container Docker para o serviço Evolution API.
+* Utiliza a imagem atendai/evolution-api:2.1.0.
+* Mapeia portas, define variáveis de ambiente e compartilha volumes.
+
+### Observações
+
+* **Dependências:** Certifique-se de ter as bibliotecas pandas, pywhatkit, json, requests, time, os, datetime e logging instaladas em seu ambiente Python.
+* **API:** As credenciais da API (URL e chave de acesso) são específicas da API que você está utilizando.
+* **Planilhas:** As planilhas Excel devem estar no mesmo diretório que o script ou o caminho completo para as planilhas deve ser especificado.
+* **Formato das Planilhas:** A estrutura das planilhas deve corresponder às variáveis utilizadas no script.
+* **pywhatkit:** A biblioteca pywhatkit pode ter limitações e instabilidades. É recomendado verificar a documentação oficial e explorar alternativas mais robustas para o envio de mensagens via WhatsApp.
+* **Logging:** O arquivo de log gerado pelo script pode ser útil para identificar e solucionar problemas.
+
+
+**Observação:** É fundamental verificar a documentação oficial das bibliotecas utilizadas para obter informações mais detalhadas sobre seus recursos e funcionalidades.

@@ -1,0 +1,4 @@
+# Desconsidera arquivos XLSX
+*.xlsx
+# Desconsidera arquivos txt
+*.txt
